@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import API from '../api';
 import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
@@ -13,7 +13,7 @@ const Login = () => {
     setError('');
     setLoading(true);
     try {
-      const res = await axios.post('/api/auth/login', formData);
+      const res = await API.post('/api/auth/login', formData);
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('name', res.data.name);
       window.location.href = "/dashboard";

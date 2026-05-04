@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API from '../api';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -13,8 +13,8 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         const [progressRes, expertRes] = await Promise.all([
-          axios.get('/api/history/progress', { headers: { 'x-auth-token': localStorage.getItem('token') } }),
-          axios.get('/api/expert/me', { headers: { 'x-auth-token': localStorage.getItem('token') } })
+          API.get('/api/history/progress'),
+          API.get('/api/expert/me')
         ]);
         setProgress(progressRes.data);
         setExpertTags(expertRes.data);

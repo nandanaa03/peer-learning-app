@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import API from '../api';
 import { useNavigate } from 'react-router-dom';
 
 const SUBJECT_OPTIONS = [
@@ -35,9 +35,7 @@ const Profile = () => {
 
   const fetchProfile = async () => {
     try {
-      const res = await axios.get('/api/profile/me', {
-        headers: { 'x-auth-token': localStorage.getItem('token') }
-      });
+      const res = await API.get('/api/profile/me');
       if (res.data) {
         setFormData({
           name: res.data.name || '',
@@ -57,9 +55,7 @@ const Profile = () => {
 
   const fetchExpertTags = async () => {
     try {
-      const res = await axios.get('/api/expert/me', {
-        headers: { 'x-auth-token': localStorage.getItem('token') }
-      });
+      const res = await API.get('/api/expert/me');
       setExpertTags(res.data);
     } catch (err) {
       console.error('Error fetching expert tags');
@@ -71,9 +67,7 @@ const Profile = () => {
     setSuccess('');
     setError('');
     try {
-      const res = await axios.get('/api/expert/update', {
-        headers: { 'x-auth-token': localStorage.getItem('token') }
-      });
+      const res = await API.get('/api/expert/update');
       setExpertTags(res.data);
       setSuccess('Expert status updated!');
       setTimeout(() => setSuccess(''), 3000);
@@ -105,17 +99,15 @@ const Profile = () => {
 
     setSaving(true);
     try {
-      const token = localStorage.getItem('token');
-      const headers = { 'x-auth-token': token };
 
       let res;
       if (hasProfile) {
         // Use PUT for updating existing profile
-        res = await axios.put('/api/profile', formData, { headers });
+        res = await API.put('/api/profile', formData);
         setSuccess('✅ Profile Updated Successfully!');
       } else {
         // Use POST for creating new profile
-        res = await axios.post('/api/profile', formData, { headers });
+        res = await API.post('/api/profile', formData);
         setSuccess('✅ Profile Created Successfully!');
         setHasProfile(true);
       }

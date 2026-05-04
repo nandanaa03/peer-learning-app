@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API from '../api'; 
 import { io } from 'socket.io-client';
 
 const Chat = () => {
@@ -28,22 +28,16 @@ const Chat = () => {
         }
 
         // Get current user profile
-        const userRes = await axios.get('/api/profile/me', {
-          headers: { 'x-auth-token': token }
-        });
+        const userRes = await API.get('/api/profile/me');
         // The profile object has the user ID in the 'user' field
         setCurrentUser({ _id: userRes.data.user, name: userRes.data.name });
 
         // Get session details
-        const sessionRes = await axios.get(`/api/session/${sessionId}`, {
-          headers: { 'x-auth-token': token }
-        });
+        const sessionRes = await API.get(`/api/session/${sessionId}`);
         setSession(sessionRes.data);
 
         // Get chat history
-        const chatRes = await axios.get(`/api/chat/${sessionId}`, {
-          headers: { 'x-auth-token': token }
-        });
+        const chatRes = await API.get(`/api/chat/${sessionId}`);
         setMessages(chatRes.data);
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -53,7 +47,7 @@ const Chat = () => {
     fetchData();
 
     // Socket connection
-    socketRef.current = io('http://localhost:5000');
+    socketRef.current = io(import.meta.env.VITE_API_URL);
     socketRef.current.emit('joinRoom', sessionId);
 
     socketRef.current.on('receiveMessage', (message) => {

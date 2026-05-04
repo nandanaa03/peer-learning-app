@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import API from '../api';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const QuestionDetail = () => {
@@ -16,9 +16,7 @@ const QuestionDetail = () => {
 
   const fetchPostDetails = async () => {
     try {
-      const res = await axios.get(`/api/forum/${id}`, {
-        headers: { 'x-auth-token': localStorage.getItem('token') }
-      });
+      const res = await API.get(`/api/forum/${id}`);
       setData(res.data);
     } catch (err) {
       console.error('Error fetching post details:', err);
@@ -32,9 +30,7 @@ const QuestionDetail = () => {
     if (!newAnswer.trim()) return;
     setSubmitting(true);
     try {
-      const res = await axios.post(`/api/forum/${id}/answer`, { answer: newAnswer }, {
-        headers: { 'x-auth-token': localStorage.getItem('token') }
-      });
+      const res = await API.post(`/api/forum/${id}/answer`, { answer: newAnswer });
       setData(prev => ({
         ...prev,
         answers: [...prev.answers, res.data]

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import API from '../api';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const SessionDetails = () => {
@@ -15,9 +15,7 @@ const SessionDetails = () => {
 
   const fetchSession = async () => {
     try {
-      const res = await axios.get(`/api/session/${id}`, {
-        headers: { 'x-auth-token': localStorage.getItem('token') }
-      });
+      const res = await API.get(`/api/session/${id}`);
       setSession(res.data);
       setModeForm({
         mode: res.data.mode || 'online',
@@ -44,9 +42,7 @@ const SessionDetails = () => {
     setModeMsg('');
     setModeError('');
     try {
-      const res = await axios.put(`/api/session/mode/${id}`, modeForm, {
-        headers: { 'x-auth-token': localStorage.getItem('token') }
-      });
+      const res = await API.put(`/api/session/mode/${id}`, modeForm);
       setModeMsg(res.data.message);
       setSession(res.data.session);
     } catch (err) {

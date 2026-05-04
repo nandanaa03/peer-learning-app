@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import API from '../api';
 import { useNavigate, Link } from 'react-router-dom';
 
 const Forum = () => {
@@ -15,9 +15,7 @@ const Forum = () => {
 
   const fetchPosts = async () => {
     try {
-      const res = await axios.get('/api/forum', {
-        headers: { 'x-auth-token': localStorage.getItem('token') }
-      });
+      const res = await API.get('/api/forum');
       setPosts(res.data);
     } catch (err) {
       console.error('Error fetching posts:', err);
@@ -29,9 +27,7 @@ const Forum = () => {
   const handlePostSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/api/forum', formData, {
-        headers: { 'x-auth-token': localStorage.getItem('token') }
-      });
+      await aAPI.post('/api/forum', formData);
       setFormData({ title: '', description: '', subject: '' });
       setShowForm(false);
       fetchPosts();

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import API from '../api';
 import { useNavigate } from 'react-router-dom';
 
 const ModeTag = ({ mode }) => {
@@ -27,11 +27,10 @@ const Sessions = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const headers = { 'x-auth-token': localStorage.getItem('token') };
       
       const [myRes, allRes] = await Promise.all([
-        axios.get('/api/session/my', { headers }),
-        axios.get('/api/session/all', { headers })
+        API.get('/api/session/my'),
+        API.get('/api/session/all')
       ]);
       
       setMySessions(myRes.data);
@@ -53,9 +52,7 @@ const Sessions = () => {
     setMessage('');
     setError('');
     try {
-      const res = await axios.post(`/api/session/join/${sessionId}`, {}, {
-        headers: { 'x-auth-token': localStorage.getItem('token') }
-      });
+      const res = await API.post(`/api/session/join/${sessionId}`, {});
       setMessage(res.data.message);
       fetchData();
     } catch (err) {
@@ -70,9 +67,7 @@ const Sessions = () => {
     setMessage('');
     setError('');
     try {
-      const res = await axios.post('/api/session/match', {}, {
-        headers: { 'x-auth-token': localStorage.getItem('token') }
-      });
+      const res = await API.post('/api/session/match', {});
       setMessage(res.data.message);
       fetchData();
     } catch (err) {
