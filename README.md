@@ -119,5 +119,6 @@ Database: MongoDB Atlas
 * Notification system
 * Video call integration
 * Recommendation system
+* More advanced courses
 
 ---
