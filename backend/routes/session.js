@@ -18,10 +18,16 @@ router.post('/match', auth, async (req, res) => {
     }
 
     const potentialMatches = await Profile.find({
-      user: { $ne: req.user },
-      subjectsKnown: { $in: userProfile.subjectsToLearn },
-      availability: userProfile.availability
-    }).populate('user', 'name');
+  user: { $ne: req.user },
+  subjectsKnown: { $in: userProfile.subjectsToLearn },
+  $or: [
+    { availability: userProfile.availability },
+    { availability: 'flexible' },
+    ...(userProfile.availability === 'flexible'
+      ? [{ availability: 'weekday' }, { availability: 'weekend' }]
+      : [])
+  ]
+}).populate('user', 'name');
 
     if (potentialMatches.length === 0) {
       return res.status(404).json({ message: 'No matches found yet. Try updating your interests!' });
